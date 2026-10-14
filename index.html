@@ -1,0 +1,432 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>Напоминание ❤️</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=Comfortaa:wght@500;700&display=swap" rel="stylesheet">
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      -webkit-tap-highlight-color: transparent;
+      user-select: none;
+    }
+
+    body {
+      background-color: #f7d2e4;
+      background-image: 
+        radial-gradient(#eeadc9 1.5px, transparent 1.5px),
+        radial-gradient(#eeadc9 1.5px, #f7d2e4 1.5px);
+      background-size: 30px 30px;
+      background-position: 0 0, 15px 15px;
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      overflow: hidden;
+      position: relative;
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+    }
+
+    /* Floating Background Items Container */
+    #floating-bg {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      pointer-events: none;
+      z-index: 1;
+      overflow: hidden;
+    }
+
+    .float-item {
+      position: absolute;
+      bottom: -60px;
+      will-change: transform, opacity;
+      animation: floatUp linear infinite;
+      opacity: 0.85;
+      filter: drop-shadow(0 2px 4px rgba(180, 100, 140, 0.25));
+    }
+
+    @keyframes floatUp {
+      0% {
+        transform: translateY(0) rotate(0deg) scale(0.8);
+        opacity: 0;
+      }
+      10% {
+        opacity: 0.85;
+      }
+      85% {
+        opacity: 0.85;
+      }
+      100% {
+        transform: translateY(-115vh) rotate(360deg) scale(1.1);
+        opacity: 0;
+      }
+    }
+
+    /* Retro Windows 95 / Aesthetic Window */
+    .window-container {
+      position: relative;
+      z-index: 10;
+      width: 90%;
+      max-width: 440px;
+      transition: transform 0.25s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    }
+
+    .retro-window {
+      background: #c394ae;
+      border: 3px solid #3d081e;
+      box-shadow: 
+        inset 2px 2px 0px #e8bed6,
+        inset -2px -2px 0px #703350,
+        6px 6px 0px rgba(61, 8, 30, 0.35);
+      border-radius: 2px;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* Window Header */
+    .window-header {
+      background: #5d1633;
+      padding: 6px 8px 6px 12px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-bottom: 2px solid #3d081e;
+    }
+
+    .window-title {
+      color: #ffffff;
+      font-size: 19px;
+      font-weight: 500;
+      letter-spacing: 0.5px;
+      text-shadow: 1px 1px 0px #2a0312;
+      font-family: 'Segoe UI', 'Comfortaa', Tahoma, sans-serif;
+    }
+
+    .close-btn {
+      width: 24px;
+      height: 24px;
+      background: #c394ae;
+      border-top: 2px solid #f2d4e4;
+      border-left: 2px solid #f2d4e4;
+      border-right: 2px solid #571e38;
+      border-bottom: 2px solid #571e38;
+      box-shadow: 1px 1px 0px #3d081e;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      cursor: pointer;
+      font-family: 'Press Start 2P', monospace, sans-serif;
+      font-size: 11px;
+      color: #5d1633;
+      font-weight: bold;
+      transition: all 0.1s ease;
+      line-height: 1;
+    }
+
+    .close-btn:active {
+      border-top: 2px solid #571e38;
+      border-left: 2px solid #571e38;
+      border-right: 2px solid #f2d4e4;
+      border-bottom: 2px solid #f2d4e4;
+      transform: translate(1px, 1px);
+    }
+
+    /* Window Body */
+    .window-body {
+      padding: 32px 24px 28px 24px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    .content-row {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 20px;
+      width: 100%;
+      margin-bottom: 28px;
+    }
+
+    .heart-icon-wrapper {
+      flex-shrink: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .heart-icon {
+      width: 72px;
+      height: auto;
+      image-rendering: pixelated;
+      image-rendering: -moz-crisp-edges;
+      image-rendering: crisp-edges;
+      animation: pulse 1.8s ease-in-out infinite;
+      filter: drop-shadow(2px 2px 0px rgba(61, 8, 30, 0.2));
+    }
+
+    @keyframes pulse {
+      0%, 100% {
+        transform: scale(1);
+      }
+      50% {
+        transform: scale(1.08);
+      }
+    }
+
+    .main-message {
+      color: #1a050f;
+      font-size: 26px;
+      font-weight: 500;
+      line-height: 1.35;
+      letter-spacing: -0.3px;
+      text-align: left;
+      font-family: 'Segoe UI', -apple-system, BlinkMacSystemFont, sans-serif;
+      transition: opacity 0.25s ease;
+    }
+
+    /* OK Button */
+    .button-container {
+      display: flex;
+      justify-content: center;
+      width: 100%;
+    }
+
+    .retro-btn {
+      min-width: 105px;
+      padding: 6px 24px;
+      background: #c394ae;
+      border-top: 2px solid #f2d4e4;
+      border-left: 2px solid #f2d4e4;
+      border-right: 2px solid #571e38;
+      border-bottom: 2px solid #571e38;
+      box-shadow: 2px 2px 0px #3d081e;
+      outline: 1px dotted rgba(61, 8, 30, 0.35);
+      outline-offset: -5px;
+      color: #1a050f;
+      font-family: 'Segoe UI', Tahoma, sans-serif;
+      font-size: 20px;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.08s ease;
+      text-align: center;
+    }
+
+    .retro-btn:hover {
+      background: #caa1b6;
+    }
+
+    .retro-btn:active {
+      border-top: 2px solid #571e38;
+      border-left: 2px solid #571e38;
+      border-right: 2px solid #f2d4e4;
+      border-bottom: 2px solid #f2d4e4;
+      transform: translate(2px, 2px);
+      box-shadow: 0px 0px 0px #3d081e;
+    }
+
+    /* Confetti Particle */
+    .sparkle-particle {
+      position: absolute;
+      pointer-events: none;
+      z-index: 100;
+      animation: explode 0.8s ease-out forwards;
+    }
+
+    @keyframes explode {
+      0% {
+        transform: translate(0, 0) scale(0.6);
+        opacity: 1;
+      }
+      100% {
+        transform: translate(var(--dx), var(--dy)) scale(1.4);
+        opacity: 0;
+      }
+    }
+
+    /* Responsive Design */
+    @media (max-width: 480px) {
+      .retro-window {
+        border-width: 2px;
+      }
+      .window-header {
+        padding: 5px 6px 5px 10px;
+      }
+      .window-title {
+        font-size: 17px;
+      }
+      .close-btn {
+        width: 22px;
+        height: 22px;
+        font-size: 10px;
+      }
+      .window-body {
+        padding: 24px 16px 22px 16px;
+      }
+      .content-row {
+        gap: 14px;
+        margin-bottom: 22px;
+      }
+      .heart-icon {
+        width: 58px;
+      }
+      .main-message {
+        font-size: 20px;
+      }
+      .retro-btn {
+        min-width: 95px;
+        font-size: 18px;
+        padding: 5px 20px;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Floating Pixel Elements in Background -->
+  <div id="floating-bg"></div>
+
+  <!-- Retro Window -->
+  <div class="window-container" id="windowBox">
+    <div class="retro-window">
+      <div class="window-header">
+        <span class="window-title" id="headerTitle">Напоминание</span>
+        <div class="close-btn" id="closeBtn" title="Закрыть">x</div>
+      </div>
+      <div class="window-body">
+        <div class="content-row">
+          <div class="heart-icon-wrapper">
+            <img 
+              src="data:image/png;base64,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" 
+              alt="Pixel Heart" 
+              class="heart-icon"
+              id="mainHeart"
+            />
+          </div>
+          <div class="main-message" id="messageText">
+            Я люблю тебя
+          </div>
+        </div>
+        <div class="button-container">
+          <button class="retro-btn" id="okBtn">ok</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // Pixel Bear SVG
+    const bearSvg = `<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' width='32' height='32'><path fill='%23915843' d='M2 1h3v3H2zm9 0h3v3h-3zM2 4h12v9H2z'/><path fill='%23fca5b7' d='M3 2h1v1H3zm9 0h1v1h-1z'/><path fill='%23b27b64' d='M3 5h10v7H3z'/><path fill='%232b130e' d='M4 6h2v2H4zm6 0h2v2h-2zm-3 2h2v1H7z'/><path fill='%23ffccd5' d='M3 8h1v1H3zm9 0h1v1h-1z'/><path fill='%23fed9e0' d='M6 8h4v3H6z'/></svg>`;
+    const bearSvgUri = "data:image/svg+xml;utf8," + encodeURIComponent(bearSvg);
+
+    // Pixel Heart SVG
+    const heartSvg = `<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' width='28' height='28'><path fill='%235d1633' d='M3 1h3v2H3zm7 0h3v2h-3zM1 3h2v2H1zm13 0h2v2h-2zM0 5h1v4H0zm15 0h1v4h-1zM1 9h2v2H1zm13 0h2v2h-2zM3 11h2v2H3zm8 0h2v2h-2zM5 13h2v2H5zm4 0h2v2H9zm-2 2h2v1H7z'/><path fill='%23e66099' d='M3 3h3v2H3zm7 0h3v2h-3zM1 5h14v4H1zm2 4h10v2H3zm2 2h6v2H5zm2 2h2v1H7z'/><path fill='%23ffffff' d='M3 4h2v2H3zm1 2h2v1H4z'/></svg>`;
+    const heartSvgUri = "data:image/svg+xml;utf8," + encodeURIComponent(heartSvg);
+
+    const bgContainer = document.getElementById('floating-bg');
+
+    // Spawn floating background items (hearts & bears)
+    function spawnFloatItem() {
+      const item = document.createElement('div');
+      item.className = 'float-item';
+      
+      const isBear = Math.random() > 0.55;
+      const img = document.createElement('img');
+      img.src = isBear ? bearSvgUri : heartSvgUri;
+      img.style.width = isBear ? (Math.random() * 14 + 28) + 'px' : (Math.random() * 12 + 20) + 'px';
+      img.style.imageRendering = 'pixelated';
+      item.appendChild(img);
+
+      item.style.left = Math.random() * 92 + 'vw';
+      const duration = Math.random() * 5 + 7; // 7 to 12s
+      item.style.animationDuration = duration + 's';
+      item.style.animationDelay = (Math.random() * 0.4) + 's';
+
+      bgContainer.appendChild(item);
+
+      setTimeout(() => {
+        item.remove();
+      }, duration * 1000 + 1000);
+    }
+
+    // Populate initial items
+    for (let i = 0; i < 16; i++) {
+      setTimeout(spawnFloatItem, i * 400);
+    }
+    setInterval(spawnFloatItem, 800);
+
+    // Interactive button logic
+    const okBtn = document.getElementById('okBtn');
+    const messageText = document.getElementById('messageText');
+    const windowBox = document.getElementById('windowBox');
+    const closeBtn = document.getElementById('closeBtn');
+    const mainHeart = document.getElementById('mainHeart');
+
+    let state = 0;
+    const heartImgSrc = mainHeart.src;
+
+    function createBurst(x, y) {
+      for (let i = 0; i < 26; i++) {
+        const particle = document.createElement('div');
+        particle.className = 'sparkle-particle';
+        
+        const img = document.createElement('img');
+        img.src = Math.random() > 0.4 ? heartImgSrc : heartSvgUri;
+        img.style.width = (Math.random() * 16 + 14) + 'px';
+        img.style.imageRendering = 'pixelated';
+        particle.appendChild(img);
+
+        const angle = Math.random() * Math.PI * 2;
+        const dist = Math.random() * 150 + 70;
+        const dx = Math.cos(angle) * dist + 'px';
+        const dy = Math.sin(angle) * dist + 'px';
+
+        particle.style.left = x + 'px';
+        particle.style.top = y + 'px';
+        particle.style.setProperty('--dx', dx);
+        particle.style.setProperty('--dy', dy);
+
+        document.body.appendChild(particle);
+        setTimeout(() => particle.remove(), 800);
+      }
+    }
+
+    okBtn.addEventListener('click', (e) => {
+      const rect = okBtn.getBoundingClientRect();
+      const clickX = rect.left + rect.width / 2;
+      const clickY = rect.top + rect.height / 2;
+
+      createBurst(clickX, clickY);
+
+      if (state === 0) {
+        messageText.style.opacity = '0';
+        setTimeout(() => {
+          messageText.innerHTML = 'Ты у меня самая лучшая девочка на свете <img src="' + heartImgSrc + '" style="width:24px; vertical-align:middle; image-rendering:pixelated; margin-left:3px; display:inline-block;">';
+          messageText.style.fontSize = '21px';
+          messageText.style.opacity = '1';
+          okBtn.textContent = '❤️';
+        }, 200);
+        state = 1;
+      } else if (state === 1) {
+        windowBox.style.transform = 'scale(1.06)';
+        setTimeout(() => {
+          windowBox.style.transform = 'scale(1)';
+        }, 150);
+      }
+    });
+
+    closeBtn.addEventListener('click', () => {
+      alert('Нет-нет-нет, это напоминание закрыть нельзя! Только "ok" ❤️');
+    });
+  </script>
+</body>
+</html>
